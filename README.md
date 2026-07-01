@@ -1,4 +1,4 @@
-# ai201-project4-provenance-guard# Provenance Guard
+# ai201-project4-provenance-guard
 
 ## Overview
 
@@ -22,37 +22,56 @@ The system combines multiple independent detection signals, calculates a confide
 
 # Architecture Overview
 
-Submission Flow
+## Submission Flow
 
+```
 Creator
-↓
+   │
+   ▼
 POST /submit
-↓
+   │
+   ▼
 Groq LLM Detection
-↓
+   │
+   ▼
 Stylometric Analysis
-↓
-Confidence Score
-↓
+   │
+   ▼
+Confidence Score Calculation
+   │
+   ▼
 Transparency Label
-↓
+   │
+   ▼
 Audit Log
-↓
+   │
+   ▼
 JSON Response
+```
 
-Appeal Flow
+## Appeal Flow
 
+```
 Creator
-↓
+   │
+   ▼
 POST /appeal
-↓
-Status Updated to Under Review
-↓
-Audit Log Updated
-↓
-Confirmation Returned
+   │
+   ▼
+Update Status → under_review
+   │
+   ▼
+Update Audit Log
+   │
+   ▼
+Confirmation Response
+```
 
----
+### Architecture Description
+
+When a creator submits content through the `POST /submit` endpoint, the system analyzes the text using two independent detection signals: a Groq LLM detector and a stylometric analyzer. Their results are combined into a weighted confidence score, which determines the transparency label returned to the user. Every decision is stored in the audit log.
+
+If a creator disagrees with the classification, they can submit an appeal through the `POST /appeal` endpoint. The system records the creator's reasoning, updates the content status to **under_review**, and stores the appeal in the audit log for later review.
 
 # API Endpoints
 
